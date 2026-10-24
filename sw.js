@@ -2,7 +2,7 @@
 // - Fichiers du site : réseau d'abord, cache en secours (mises à jour immédiates)
 // - XLSX : mis en cache à l'installation → import Excel fonctionnel hors ligne
 // - Changer V pour vider l'ancien cache (forcer la mise à jour)
-const V="archigest-v6";
+const V="archigest-v7";
 
 const ASSETS=[
   "./",
