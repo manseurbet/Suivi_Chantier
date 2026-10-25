@@ -21,9 +21,3 @@ cands(wb.SheetNames.filter(n=>!/infrastructure/i.test(n)).map(nm=>({nm,it:parseS
 rd.onerror=()=>{S.msg="Lecture du fichier impossible. Utilisez « Ou coller depuis Excel » ci-dessous.";go()};rd.readAsArrayBuffer(fl)}
 function impTxt(t){const p=P();if(Object.keys(p.val||{}).length){S.msg="Devis verrouillé : des attachements sont déjà validés.";go();return}FN="";cands([{nm:"texte collé",it:parseSheet(t.split(/\r?\n/).map(l=>l.split("\t")))}])}
 function tg(){const p=P();p.lock=!p.lock;go()}
-const bk=()=>JSON.stringify(S);
-function dl(){try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([bk()],{type:"application/json"}));a.download="archigest-sauvegarde-"+new Date().toISOString().slice(0,10)+".json";a.click();S.bm="Sauvegarde téléchargée."}catch(e){S.bm="Téléchargement impossible ici : utilisez « Copier »."}go()}
-function cp(){try{navigator.clipboard.writeText(bk()).then(()=>{S.bm="Sauvegarde copiée : collez-la dans un fichier texte.";go()},()=>{S.bm="Copie impossible.";go()})}catch(e){S.bm="Copie impossible.";go()}}
-function rs(t){try{const d=JSON.parse(t);if(!d||!Array.isArray(d.projects))throw 0;S=d;S.tab="projets";S.bm="Sauvegarde restaurée.";go()}catch(e){S.bm="Sauvegarde invalide : fichier ou texte non reconnu.";go()}}
-function rsFile(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=e=>rs(e.target.result);r.readAsText(f)}
-const stat=()=>`<div style="font-size:12px;margin:4px 0;color:${OK?"var(--mut)":"var(--bad)"}">${OK?"💾 Enregistrement automatique actif dans ce navigateur. Adresse : "+(location.protocol=="file:"?"fichier ouvert directement":esc(location.origin))+" (une autre adresse ou un autre navigateur = d’autres données).":"⚠️ Le navigateur bloque l’enregistrement : vos projets seront perdus à la fermeture. Faites une sauvegarde (Télécharger ou Copier) ou ouvrez l’application depuis votre site GitHub."}</div>`;
