@@ -11,7 +11,7 @@ function mk(name){return{id:Date.now(),name,moa:"",ent:"",gar:"caution",contrat:
 function setMode(m){S.mode=m;S.del=null;go()}
 function np(){if(S.mode=="entreprise"&&S.projects.length){S.bm="Profil entreprise : un seul dossier. Utilisez OUVRIR pour le reprendre.";go();return}const p=mk("Nouveau projet");S.projects.push(p);S.cur=p.id;S.tab="devis";S.del=null;go()}
 function dp(){if(S.del==S.cur){S.projects=S.projects.filter(x=>x.id!=S.cur);S.cur=S.projects[0]?S.projects[0].id:null;S.del=null}else S.del=S.cur;go()}
-function go(t){if(t){if(t=="infos"&&S.tab!="infos")S.prev=S.tab;S.tab=t;S.msg="";S.bm=""}save();render()}
+function go(t){if(t){if(t=="infos"&&S.tab!="infos")S.prev=S.tab;S.tab=t;S.msg="";S.bm="";S.sm=""}save();render()}
 function set(k,v){P()[k]=v;go()}
 function ai(){P().items.push({d:"",u:"m²",q:0,pu:0,m:Array(12).fill(0),av:[0,0,0]});go()}
 function di(i){P().items.splice(i,1);go()}
@@ -30,4 +30,7 @@ const fp=x=>Math.abs(x)<0.005?"0":fmt(x);
 const idBlock=p=>{const g=(l,v)=>v?`<div>${l} ${esc(v)}</div>`:"";return`<div style="font-size:12px;line-height:1.5"><div style="text-align:center;font-weight:700">République Algérienne Démocratique et Populaire</div>${g("",p.ent)}${g("Adresse :",p.adr)}${g("RC :",p.rc)}${g("NIF :",p.nif)}${g("NIS :",p.nis)}${g("N° d’article :",p.art)}${g("N° de compte :",(p.rib||"")+(p.bq?" · "+p.bq:""))}${g("Contrat n°",p.contrat)}${g("Objet :",p.objet)}${p.montant?g("Montant du contrat :",fmt(p.montant)+" DA"):""}${g("Doit à :",p.doit)}${g("Projet :",p.name)}</div>`};
 function sv(i,k,v){P().items[i].av[k]=v;go()}
 const L=(l,v,c)=>`<tr class="${c||""}"><td>${l}</td><td class="r">${v}</td></tr>`;
-const selS=p=>`<div class="card row"><label style="width:150px">Situation n°<select onchange="set('sit',+this.value)">${[...Array(12)].map((_,i)=>`<option value="${i+1}" ${i+1==p.sit?"selected":""}>${i+1}${p.val&&p.val[i+1]?" ✓":""}</option>`).join("")}</select></label></div>`;
+const okTo=(p,m)=>{for(let k=1;k<m;k++)if(!(p.val&&p.val[k]))return false;return true};
+const selS=p=>`<div class="card row np"><label style="width:150px">Situation n°<select onchange="gs(+this.value)">${[...Array(12)].map((_,i)=>`<option value="${i+1}" ${i+1==p.sit?"selected":""} ${okTo(p,i+1)?"":"disabled"}>${i+1}${p.val&&p.val[i+1]?" ✓":""}</option>`).join("")}</select></label>${S.sm?`<span class="bad">${esc(S.sm)}</span>`:""}</div>`;
+function gs(v){const p=P();if(!okTo(p,v)){let k=1;while(p.val&&p.val[k])k++;S.sm="Validez d’abord l’attachement n° "+k+" pour passer au suivant.";go();return}S.sm="";p.sit=v;go()}
+function nx(){const p=P();if(p.sit<12&&p.val&&p.val[p.sit]){p.sit++;S.sm=""}go()}
