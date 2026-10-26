@@ -4,204 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ArchiGest DZ</title>
-<style>
-:root{--bg:#f6f7f9;--card:#fff;--tx:#1d2330;--mut:#6b7280;--ac:#1f4e8c;--ln:#d9dde5;--in:#fff8e1;--bad:#c0392b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161d;--card:#1b212b;--tx:#e8ebf0;--mut:#9aa4b2;--ac:#4f86d6;--ln:#2e3744;--in:#2a2615;--bad:#ff8a7a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#12161d;--card:#1b212b;--tx:#e8ebf0;--mut:#9aa4b2;--ac:#4f86d6;--ln:#2e3744;--in:#2a2615;--bad:#ff8a7a;color-scheme:dark}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,"Segoe UI",Arial,sans-serif}
-header{padding:12px 14px 4px;font-weight:700;font-size:18px}
-header small{display:block;font-weight:400;font-size:12px;color:var(--mut)}
-nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;background:var(--card);border-top:1px solid var(--ln);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
-nav button{flex:1;min-width:0;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10px;padding:4px 0;color:var(--mut)}
-nav button span{font-size:20px}
-nav button.on{background:none;color:var(--ac);font-weight:700}
-nav button:disabled{opacity:.35}
-button,select,input{font:inherit;color:var(--tx)}
-button{border:1px solid var(--ln);background:var(--card);padding:7px 12px;border-radius:8px;cursor:pointer}
-button.on,button.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
-main{max-width:1000px;margin:0 auto;padding:0 14px 96px}
-.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:14px;margin:10px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mut)}
-input,select{border:1px solid var(--ln);background:var(--in);border-radius:6px;padding:6px;width:100%}
-td input{min-width:70px}
-td.d input{min-width:170px}
-.sc{overflow-x:auto}
-table{border-collapse:separate;border-spacing:0;width:100%;min-width:780px;border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
-th,td{border:0;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);padding:4px 6px;text-align:left;vertical-align:middle}
-.s1,.s2{position:sticky;background:var(--card);z-index:2}
-.s1{left:0;width:52px;min-width:52px;max-width:52px;box-sizing:border-box;overflow:hidden}
-.s2{left:52px}
-.dz{width:300px;max-width:300px;white-space:normal;overflow-wrap:anywhere}
-label.btn{display:inline-flex;flex-direction:row;align-items:center;gap:6px;color:var(--tx);font-size:14px;border:1px solid var(--ln);background:var(--card);padding:7px 12px;border-radius:8px;cursor:pointer}
-label.btn.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
-th{font-size:12px;color:var(--mut)}
-td.r,th.r{text-align:center;white-space:nowrap}
-td input[type=number]{text-align:center}
-.off{opacity:.5}
-input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-input[type=number]{-moz-appearance:textfield}
-.bad{color:var(--bad);font-weight:600}
-.tot td{font-weight:700}
-.net td{font-weight:700;font-size:16px}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.sig{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;font-size:12px}
-.sig div{border:1px solid var(--ln);height:90px;padding:6px}
-@media (max-width:700px){.dz{width:112px;max-width:112px;font-size:12px}th,td{padding:3px 4px;font-size:12px}td input{min-width:56px}}
-@media (max-width:420px){nav button{font-size:9px;letter-spacing:-.3px}nav button span{font-size:18px}}
-@media print{header,nav,.np{display:none}body{background:#fff;color:#000}.card{border:0}}
-</style>
+<meta name="description" content="ArchiGest DZ : suivi des situations de travaux, décomptes, avenants et DGD pour les cabinets d’architecture en Algérie.">
+<meta name="theme-color" content="#1f4e8c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ArchiGest">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>🏗️ ArchiGest DZ<small id="pn"></small></header>
 <nav id="nav"></nav>
 <main id="v"></main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
-const $=s=>document.querySelector(s);
-const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
-const esc=s=>String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
-let OK=true,S;try{S=JSON.parse(localStorage.getItem("archigest_dz"));localStorage.setItem("archigest_t","1");localStorage.removeItem("archigest_t")}catch(e){OK=false}
-try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
-if(!S||!S.projects)S={projects:[],cur:null,tab:"projets",del:null};
-S.tab="projets";S.cur=null;S.del=null;S.back=null;
-const save=()=>{try{localStorage.setItem("archigest_dz",JSON.stringify(S));OK=true}catch(e){OK=false}};
-const P=()=>S.projects.find(p=>p.id===S.cur);
-function mk(name){return{id:Date.now(),name,moa:"",ent:"",gar:"caution",contrat:"",objet:"",montant:0,doit:"",adr:"",rc:"",nif:"",nis:"",art:"",rib:"",bq:"",tva:19,ret:5,items:[],adj:{},sit:1}}
-function setMode(m){S.mode=m;S.del=null;go()}
-function np(){if(S.mode=="entreprise"&&S.projects.length){S.bm="Profil entreprise : un seul dossier. Utilisez OUVRIR pour le reprendre.";go();return}const p=mk("Nouveau projet");S.projects.push(p);S.cur=p.id;S.tab="devis";S.del=null;go()}
-function dp(){if(S.del==S.cur){S.projects=S.projects.filter(x=>x.id!=S.cur);S.cur=S.projects[0]?S.projects[0].id:null;S.del=null}else S.del=S.cur;go()}
-function go(t){if(t){if(t=="infos"&&S.tab!="infos")S.prev=S.tab;S.tab=t;S.msg="";S.bm=""}save();render()}
-function set(k,v){P()[k]=v;go()}
-function ai(){P().items.push({d:"",u:"m²",q:0,pu:0,m:Array(12).fill(0),av:[0,0,0]});go()}
-function di(i){P().items.splice(i,1);go()}
-function si(i,k,v){P().items[i][k]=v;go()}
-function sm(i,v){const p=P();if(p.val&&p.val[p.sit])return;p.items[i].m[p.sit-1]=v;go()}
-function sa(k,v){const p=P();(p.adj[p.sit]=p.adj[p.sit]||{av:0,pen:0})[k]=v;go()}
-const IT=it=>{it.av=it.av||[];while(it.av.length<12)it.av.push(0);it.qm=it.q+it.av.reduce((a,b)=>a+b,0);it.qa=it.qm;return it};
-function calc(p){const n=p.sit,r={prev:0,mois:0,cum:0,mi:0,avm:0,mk:0,real:0,pv:0,mv:0,mm:0};
-p.items.forEach(it=>{IT(it);const sum=k=>it.m.slice(0,k).reduce((a,b)=>a+b,0),tot=sum(12),pl=Math.max(tot-it.qm,0),mn=p.done?Math.max(it.qm-tot,0):0;
-it.qa=it.qm+pl-mn;it.au=pl-mn;
-const cap=k=>Math.min(sum(k),it.qm),pr=cap(n-1),cu=cap(n);
-Object.assign(it,{pr,cu,mo:cu-pr,tot,rawp:sum(n-1),raw:sum(n),mr:it.m[n-1]||0});
-r.mi+=it.q*it.pu;r.mm+=it.qm*it.pu;r.avm+=(it.qm-it.q)*it.pu;r.mk+=it.qa*it.pu;r.prev+=pr*it.pu;r.mois+=it.mo*it.pu;r.cum+=cu*it.pu;r.real+=Math.min(tot,it.qa)*it.pu;r.pv+=pl*it.pu;r.mv+=mn*it.pu});
-return r}
-const fp=x=>Math.abs(x)<0.005?"0":fmt(x);
-const idBlock=p=>{const g=(l,v)=>v?`<div>${l} ${esc(v)}</div>`:"";return`<div style="font-size:12px;line-height:1.5"><div style="text-align:center;font-weight:700">République Algérienne Démocratique et Populaire</div>${g("",p.ent)}${g("Adresse :",p.adr)}${g("RC :",p.rc)}${g("NIF :",p.nif)}${g("NIS :",p.nis)}${g("N° d’article :",p.art)}${g("N° de compte :",(p.rib||"")+(p.bq?" · "+p.bq:""))}${g("Contrat n°",p.contrat)}${g("Objet :",p.objet)}${p.montant?g("Montant du contrat :",fmt(p.montant)+" DA"):""}${g("Doit à :",p.doit)}${g("Projet :",p.name)}</div>`};
-function sv(i,k,v){P().items[i].av[k]=v;go()}
-const L=(l,v,c)=>`<tr class="${c||""}"><td>${l}</td><td class="r">${v}</td></tr>`;
-const selS=p=>`<div class="card row"><label style="width:150px">Situation n°<select onchange="set('sit',+this.value)">${[...Array(12)].map((_,i)=>`<option value="${i+1}" ${i+1==p.sit?"selected":""}>${i+1}${p.val&&p.val[i+1]?" ✓":""}</option>`).join("")}</select></label></div>`;
-function parseSheet(rows){const num=v=>parseFloat(String(v).replace(/\s/g,"").replace(",","."));let c=null,s=0;
-for(let i=0;i<Math.min(rows.length,25)&&!c;i++){const r=rows[i].map(x=>String(x).toLowerCase().trim()),f=g=>r.findIndex(g),d=f(x=>/désignation|designation|libellé|libelle/.test(x)),q=f(x=>/^(quant|qté|qte)/.test(x)),pu=f(x=>/^(p[.\-\s]?u|prix)/.test(x));
-if(d>=0&&q>=0&&pu>=0){c={k:f(x=>/^(code|n°)/.test(x)),d,u:f(x=>x=="u"||/^unit/.test(x)),q,pu};s=i+1}}
-if(!c)return[];
-const it=[],isT=t=>/(^|[\s\/])total([^a-zà-ÿ]|$)/i.test(t),glob=t=>/g[ée]n[ée]ral|t\.?t\.?c|toutes\s+taxes/i.test(t)||/^\s*total\s*(en\s*)?h\.?t\.?\s*:?\s*$/i.test(t);let lot="",pre=[];
-rows.slice(s).forEach(r=>{const dd=String(r[c.d]).replace(/\s+/g," ").trim(),k=c.k>=0?String(r[c.k]).trim():"",q=num(r[c.q]),pu=num(r[c.pu]),last=it[it.length-1];
-const sub=lb=>{if(last&&!glob(lb)){(last.sub=last.sub||[]).push(lb);const m=lb.match(/^\s*total\s*lot\s*(\d+)/i);if(m)for(let j=it.length-1;j>=0&&!it[j].lot;j--)it[j].lot="LOT "+m[1]}};
-if(!dd){const lb=String(r[c.pu]).trim();if(isT(lb)){sub(lb);return}if(!(q>0))return}
-if(!(q>0)){if(isT(dd)){sub(dd);return}if(/^lot\s*\d/i.test(dd)){lot=dd;pre.push({t:dd,l:1})}else pre.push({t:dd,k});return}
-it.push({n:k,pre,d:dd,u:c.u>=0?String(r[c.u]).trim():"",q,pu:pu>=0?pu:0,lot,m:Array(12).fill(0),av:[0,0,0]});pre=[]});
-return it}
-let CAND=[],FN="";
-function use(i){const p=P(),c=CAND[i];p.items=c.it;p.adj={};p.sit=1;p.val={};p.lock=true;if(p.name==="Nouveau projet"&&FN)p.name=FN.replace(/\.[^.]+$/,"");S.msg=c.it.length+" articles importés depuis « "+c.nm+" » : total HT "+fmt(c.t)+" DA. Comparez avec le total de votre devis.";CAND=[];S.tab="devis";go()}
-function cands(l){CAND=l.filter(x=>x.it.length).map(x=>Object.assign(x,{t:x.it.reduce((a,y)=>a+y.q*y.pu,0)}));
-if(!CAND.length){S.msg="Aucun article reconnu : vérifiez les colonnes Code, Désignation, U, Quantité et P-U.";go();return}
-if(CAND.length==1)use(0);else{S.msg="";go()}}
-function imp(inp){const fl=inp.files[0];if(!fl)return;const p=P();if(Object.keys(p.val||{}).length){S.msg="Devis verrouillé : des attachements sont déjà validés.";go();return}
-const rd=new FileReader();FN=fl.name;
-rd.onload=e=>{try{if(typeof XLSX==="undefined"){S.msg="La bibliothèque de lecture Excel n’est pas chargée (connexion internet ?). Utilisez « Ou coller depuis Excel » ci-dessous.";go();return}const wb=XLSX.read(e.target.result,{type:"array"});
-cands(wb.SheetNames.filter(n=>!/infrastructure/i.test(n)).map(nm=>({nm,it:parseSheet(XLSX.utils.sheet_to_json(wb.Sheets[nm],{header:1,defval:""}))})))}catch(x){S.msg="Fichier illisible. Utilisez un fichier Excel ou CSV.";go()}};
-rd.onerror=()=>{S.msg="Lecture du fichier impossible. Utilisez « Ou coller depuis Excel » ci-dessous.";go()};rd.readAsArrayBuffer(fl)}
-function tg(){const p=P();p.lock=!p.lock;go()}
-function vProj(){if(!S.mode)return`<div class="card" style="text-align:center"><div style="font-size:42px">🏗️</div><div style="margin:4px 0 12px">Vous êtes :</div><button class="pri" style="width:100%;font-size:17px;padding:14px" onclick="setMode('bureau')">🏛️ Bureau d’architecture<br><small>Plusieurs dossiers · abonnement mensuel</small></button><button style="width:100%;font-size:17px;padding:14px;margin-top:10px" onclick="setMode('entreprise')">👷 Entreprise de réalisation<br><small>Un seul dossier · facturé par projet</small></button></div>`;return`<div class="card" style="text-align:center"><div style="font-size:42px">🏗️</div><div style="display:flex;flex-direction:column;gap:12px;margin-top:14px"><button class="pri" style="font-size:18px;padding:16px" onclick="np()">+ Nouveau projet</button><button style="font-size:18px;padding:16px" onclick="go('ouvrir')">📂 Ouvrir</button></div>${S.bm?`<p class="bad">${esc(S.bm)}</p>`:""}</div>${OK?"":`<div class="card bad">⚠️ Le navigateur bloque l’enregistrement : vos projets seront perdus à la fermeture.</div>`}`}
-function opn(id){S.cur=id;S.del=null;go(P().items.length?"attachement":"devis")}
-function dq(id){if(S.del==id){S.projects=S.projects.filter(x=>x.id!=id);S.del=null;if(S.cur==id)S.cur=null}else S.del=id;go()}
-function vOuvrir(){if(!S.projects.length)return`<div class="card">Aucun projet enregistré.</div>`;
-return`<div class="card"><b>Projets enregistrés</b>${S.projects.map(q=>`<div class="row" style="margin-top:8px;flex-wrap:nowrap"><button style="flex:1;text-align:left" onclick="opn(${q.id})">📁 ${esc(q.name)}</button><button onclick="dq(${q.id})">${S.del==q.id?"Confirmer la suppression":"🗑"}</button></div>`).join("")}</div>`}
-function fin(a){const p=P();if(!p.ent&&!p.skip){S.back={tab:S.tab,act:a};go("infos");return}act(a)}
-function act(a){const p=P();if(a=="print")window.print();else{p.saved=p.saved||{};p.saved[p.sit]=new Date().toLocaleDateString("fr-FR");go()}}
-function cont(){const b=S.back;S.back=null;if(b){S.tab=b.tab;go();act(b.act)}else go(S.prev&&S.prev!="infos"?S.prev:"projets")}
-function p0(){P().skip=true;cont()}
-function vInfos(p){const f=(l,k,t)=>`<label>${l}<input type="${t||"text"}" ${t=="number"?'step="any"':""} value="${esc(p[k]==null?"":p[k])}" onchange="set('${k}',${t=="number"?"+this.value":"this.value"})"></label>`;
-return`<div class="card"><b>Entrepreneur et contrat</b><div style="color:var(--mut);font-size:12px;margin-top:4px">${S.back?"Complétez ces informations avant "+(S.back.act=="print"?"d’imprimer":"d’enregistrer")+". Elles apparaissent sur les documents.":"Ces informations apparaissent sur les documents imprimés. Elles ne sont pas nécessaires pour un simple essai."}</div></div>
-<div class="card"><b>Formulaire de l’entrepreneur</b><div class="grid" style="margin-top:8px">${f("Nom : ETB / TCE …","ent")}${f("Adresse","adr")}${f("RC (numéro, date et lieu)","rc")}${f("NIF","nif")}${f("NIS","nis")}${f("N° d’article","art")}${f("N° de compte (agence, banque)","rib")}</div></div>
-<div class="card"><b>Contrat</b><div class="grid" style="margin-top:8px">${f("Nom du projet","name")}${f("Contrat n°","contrat")}${f("Objet du contrat","objet")}${f("Montant du contrat (DA TTC)","montant","number")}${f("Doit à (ex. Monsieur le directeur de …)","doit")}${f("Maître d’ouvrage","moa")}${f("TVA (%)","tva","number")}${f("Taux de garantie (%)","ret","number")}<label>Garantie<select onchange="set('gar',this.value)"><option value="caution" ${(p.gar||"retenue")=="caution"?"selected":""}>Caution bancaire (sans retenue)</option><option value="retenue" ${(p.gar||"retenue")=="retenue"?"selected":""}>Retenue sur les paiements</option></select></label></div></div>
-<div class="card row np"><button class="pri" onclick="cont()">${S.back?"Valider et continuer":"Valider"}</button>${S.back?`<button onclick="p0()">Continuer sans remplir</button>`:""}</div>`}
-const isM3=u=>/^m(3|³)$/i.test(String(u||"").trim());
-const qs=(it,x)=>{x=Math.round((+x||0)*1e6)/1e6;return isM3(it.u)?x.toLocaleString("fr-FR",{minimumFractionDigits:3,maximumFractionDigits:3}):x.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:3})};
-const Q=(it,x)=>`<td class="r">${qs(it,x)}</td>`,qv=(it,x)=>isM3(it.u)?(+x||0).toFixed(3):x;
-const isP=l=>/^\s*(s\/|sous)/i.test(l),sv2=(p,i,f,lb)=>{const it=p.items[i],part=isP(lb);let a=0;for(let j=i;j>=0;j--){const x=p.items[j];if(x.lot!==it.lot)break;if(j<i&&x.sub&&(part||x.sub.some(l=>!isP(l))))break;a+=f(x)}return a};
-const sbr=(p,i,k,fs,bl)=>(p.items[i].sub||[]).map(lb=>`<tr class="tot"><td colspan="${k}">${esc(lb)}</td>${fs.map((f,j)=>{const v=sv2(p,i,f,lb);return`<td class="r">${bl&&bl[j]&&Math.abs(v)<0.005?"":fp(v)}</td>`}).join("")}</tr>`).join("");
-const hd=(p,i,w)=>{const it=p.items[i];if(it.pre)return it.pre.map(h=>h.l?`<tr><td colspan="${w}"><b>${esc(h.t)}</b></td></tr>`:`<tr><td class="s1">${esc(h.k||"")}</td><td class="s2"><div class="dz"><i>${esc(h.t)}</i></div></td>${"<td></td>".repeat(Math.max(w-2,0))}</tr>`).join("");
-const q=p.items[i-1]||{},o=[];
-if(it.lot&&it.lot!==q.lot)o.push(`<tr><td colspan="${w}"><b>${esc(it.lot)}</b></td></tr>`);
-if(it.par&&(it.par!==q.par||it.lot!==q.lot))o.push(`<tr><td>${esc(it.pk||"")}</td><td colspan="${w-1}"><i>${esc(it.par)}</i></td></tr>`);
-return o.join("")};
-function vDevis(p){const r=calc(p),lo=p.lock;
-const rows=p.items.map((it,i)=>`${hd(p,i,7)}<tr>`+(lo?`<td class="s1">${esc(it.n||"")}</td><td class="ds s2"><div class="dz">${esc(it.d)}</div></td><td>${esc(it.u)}</td>${Q(it,it.q)}<td class="r">${fmt(it.pu)}</td>`:`<td><input value="${esc(it.n||"")}" style="min-width:64px" onchange="si(${i},'n',this.value)"></td><td class="d"><input value="${esc(it.d)}" onchange="si(${i},'d',this.value)"></td><td><input value="${esc(it.u)}" style="min-width:48px" onchange="si(${i},'u',this.value)"></td><td><input type="number" step="any" value="${qv(it,it.q)}" onchange="si(${i},'q',+this.value)"></td><td><input type="number" step="any" value="${it.pu}" onchange="si(${i},'pu',+this.value)"></td>`)+`<td class="r">${fmt(it.q*it.pu)}</td>`+(lo?"":`<td><button onclick="di(${i})">×</button></td>`)+`</tr>`+sbr(p,i,5,[it=>it.q*it.pu])).join("");
-const rec=c=>/devis|init/i.test(c.nm),ch=CAND.length>1?`<div class="card" style="border-color:var(--ac)"><b>Plusieurs onglets contiennent un devis : choisissez celui à importer</b><div style="color:var(--mut);font-size:12px;margin:4px 0">Comparez le total avec celui de votre devis. Rien n’est importé tant que vous n’avez pas choisi.</div>${CAND.map((c,i)=>`<div style="margin-top:6px"><button class="${rec(c)?"pri":""}" onclick="use(${i})">${esc(c.nm)} : ${c.it.length} articles, total HT ${fmt(c.t)} DA${rec(c)?" (conseillé)":""}</button></div>`).join("")}</div>`:"";
-return ch+`<div class="card"><button class="np" style="float:right" onclick="go('infos')">👷 Entrepreneur et contrat</button>
-<div class="np" style="margin:8px 0"><label class="btn pri">📄 Importer un devis<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="imp(this)"></label></div>${S.msg?`<p class="${/^\d/.test(S.msg)?"":"bad"}" style="font-weight:600">${esc(S.msg)}</p>`:""}
-${lo?`<p>🔒 Devis importé : quantités, prix et montants non modifiables.</p>`:""}
-<div class="sc"><table style="min-width:640px"><tr><th class="s1">Code</th><th class="s2">Désignation</th><th>U</th><th>Quantité</th><th>P-U</th><th class="r">Montant</th><th></th></tr>${rows}<tr class="tot"><td colspan="5">Total du devis HT (DA)</td><td class="r">${fmt(r.mi)}</td><td></td></tr></table></div>${lo?"":`<div class="np" style="margin-top:8px"><button onclick="ai()">+ Ligne</button></div>`}</div>`}
-function val(){const p=P();p.val=p.val||{};p.val[p.sit]=new Date().toLocaleDateString("fr-FR");go()}
-function vAtt(p){calc(p);const n=p.sit,vd=!!(p.val&&p.val[n]),pvt=p.items.reduce((a,it)=>a+Math.max(it.raw-it.qm,0)*it.pu,0);
-const rows=p.items.map((it,i)=>{const pv=Math.max(it.raw-it.qm,0);return`${hd(p,i,8)}<tr><td class="s1">${esc(it.n||"")}</td><td class="ds s2"><div class="dz">${esc(it.d)}</div></td><td>${esc(it.u)}</td>${Q(it,it.qm)}${Q(it,it.rawp)}<td><input type="number" step="any" inputmode="decimal" ${vd?"disabled":""} value="${it.mr?qv(it,it.mr):""}" onwheel="this.blur()" onchange="sm(${i},+this.value)"></td>${Q(it,it.raw)}<td class="r ${pv>1e-9?"bad":""}">${qs(it,pv)}</td></tr>`}).join("");
-return selS(p)+`<div class="card sc ${vd?"off":""}"><b>Attachement n° ${n}</b><table style="min-width:660px"><tr><th class="s1">Code</th><th class="s2">Désignation</th><th>U</th><th class="r">Quantité marché</th><th class="r">Précédent</th><th>Mois</th><th class="r">Cumulé</th><th class="r">Plus-value</th></tr>${rows}</table>${pvt>0?`<p class="bad">Plus-values transférées automatiquement aux Avenants : ${fmt(pvt)} DA HT</p>`:""}</div>
-<div class="card">${vd?`🔒 Attachement n° ${n} validé le ${p.val[n]} : il n’est plus modifiable. Pour le suivant, choisissez son numéro dans la liste.`:""}<div class="row np" style="margin-top:${vd?8:0}px">${vd?"":`<button class="pri" onclick="val()">✅ Valider l’attachement n° ${n}</button>`}<button onclick="fin('print')">🖨️ Imprimer</button></div></div>`}
-const U0=["zéro","un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix","onze","douze","treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf"],D0=["","","vingt","trente","quarante","cinquante","soixante"];
-const f99=(n,s)=>{if(n<20)return U0[n];const t=Math.floor(n/10),u=n%10;if(t==7||t==9)return(t==7?"soixante":"quatre-vingt")+(t==7&&u==1?" et ":"-")+U0[10+u];if(t==8)return u?"quatre-vingt-"+U0[u]:s?"quatre-vingts":"quatre-vingt";return D0[t]+(u==1?" et un":u?"-"+U0[u]:"")};
-const f3=(n,s)=>{const h=Math.floor(n/100),r=n%100;return(h?(h==1?"cent":U0[h]+" cent")+(h>1&&!r&&s?"s":""):"")+(h&&r?" ":"")+(r?f99(r,s):"")};
-const fr=n=>{if(!n)return"zéro";const m=Math.floor(n/1e6),k=Math.floor(n%1e6/1e3),r=n%1e3,o=[];if(m)o.push(m==1?"un million":f3(m,1)+" millions");if(k)o.push(k==1?"mille":f3(k,0)+" mille");if(r)o.push(f3(r,1));return o.join(" ")};
-const lettres=(x,w)=>{let e=Math.floor(x),c=Math.round((x-e)*100);if(c==100){e++;c=0}return(fr(e)+(e==1?" dinar":" dinars")+(c?" et "+(w?fr(c):c)+(c==1?" centime":" centimes"):"")).toUpperCase()};
-const hdr=p=>`<div style="font-size:12px;line-height:1.5">${esc(p.ent||"")}${p.adr?"<br>"+esc(p.adr):""}</div>`;
-function vDec(p){const r=calc(p),g={},C=x=>`<td class="r">${fp(x)}</td>`;
-const rows=p.items.map((it,i)=>{const k=it.lot||"Sans lot",o=g[k]=g[k]||[0,0,0,0];o[0]+=it.qm*it.pu;o[1]+=it.pr*it.pu;o[2]+=it.mo*it.pu;o[3]+=it.cu*it.pu;
-return hd(p,i,12)+`<tr><td class="s1">${esc(it.n||"")}</td><td class="ds s2"><div class="dz">${esc(it.d)}</div></td><td>${esc(it.u)}</td>${Q(it,it.qm)}${Q(it,it.pr)}${Q(it,it.mo)}${Q(it,it.cu)}<td class="r">${fmt(it.pu)}</td>${C(it.qm*it.pu)}${C(it.pr*it.pu)}${C(it.mo*it.pu)}${C(it.cu*it.pu)}</tr>`+sbr(p,i,8,[it=>it.qm*it.pu,it=>it.pr*it.pu,it=>it.mo*it.pu,it=>it.cu*it.pu])}).join("");
-const tv=[r.mm,r.prev,r.mois,r.cum],T3=["TOTAL EN HT","TVA "+p.tva+" %","TOTAL EN TTC"].map((l,k)=>`<tr class="tot"><td colspan="8">${l}</td>${tv.map(v=>C([v,v*p.tva/100,v*(1+p.tva/100)][k])).join("")}</tr>`).join("");
-const rec=Object.entries(g).map(([k,o])=>{const m=k.match(/^(LOT\s*\d+\s*\)?)\s*(.*)$/i);return`<tr><td>${esc(m?m[1]:"")}</td><td>${esc(m?m[2]:k)}</td>${o.map(C).join("")}</tr>`}).join(""),ct=[0,1,2,3].map(i=>Object.values(g).reduce((a,o)=>a+o[i],0));
-const R3=["TOTAL GÉNÉRAL en H.T","T.V.A "+p.tva+" %","TOTAL GÉNÉRAL en T.T.C"].map((l,k)=>`<tr class="tot"><td colspan="2">${l}</td>${ct.map(v=>C([v,v*p.tva/100,v*(1+p.tva/100)][k])).join("")}</tr>`).join("");
-const ce=`style="text-align:center"`;
-return selS(p)+`<div class="card sc">${hdr(p)}<div>PROJET : ${esc(p.name)}</div><b>DÉCOMPTE N° ${p.sit}</b> (DA)<table style="min-width:960px;margin-top:6px"><tr><th rowspan="2" class="s1">CODE</th><th rowspan="2" class="s2">DÉSIGNATION DES OUVRAGES</th><th rowspan="2">U</th><th colspan="4" ${ce}>Quantité</th><th rowspan="2" class="r">P-U</th><th colspan="4" ${ce}>Montant</th></tr><tr><th class="r">Marché</th><th class="r">Précédent</th><th class="r">Mois</th><th class="r">Cumulé</th><th class="r">Marché</th><th class="r">Précédent</th><th class="r">Mois</th><th class="r">Cumulé</th></tr>${rows}${T3}</table></div>
-<div class="card sc"><b>RÉCAPITULATION DU DEVIS ESTIMATIF</b><table style="min-width:620px;margin-top:6px"><tr><th>N°</th><th>Désignation des ouvrages</th><th class="r">Marché</th><th class="r">Précédent</th><th class="r">Mois</th><th class="r">Cumul</th></tr>${rec}${R3}</table></div>
-<div class="row np"><button onclick="fin('print')">🖨️ Imprimer</button></div>`}
-function vSit(p){const r=calc(p),n=p.sit,Z={af:0,aa:0,ao:0,rf:0,ra:0,ro:0,pen:0},A=k=>{const o=Object.assign({},Z,p.adj[k]||{});if(o.av&&!o.rf)o.rf=o.av;return o},a=A(n),b=n>1?A(n-1):Z;
-const T1=r.cum+a.af+a.aa+a.ao,T2=r.prev+b.af+b.aa+b.ao,br=T1-T2,T4=a.rf+a.ra+a.ro,ht=br-T4,tva=ht*p.tva/100,ttc=ht+tva,ret=(p.gar||"retenue")=="retenue",rt=ret?ttc*p.ret/100:0,net=ttc-rt-a.pen,cau=r.mm*(1+p.tva/100)*p.ret/100;
-const Rw=(l,v,c)=>`<tr class="${c||""}"><td>${l}</td><td class="r">${v}</td></tr>`,Ri=(l,k)=>`<tr><td>${l}</td><td class="r"><input type="number" step="any" value="${a[k]}" onchange="sa('${k}',+this.value)"></td></tr>`;
-return selS(p)+`<div class="card"><div style="font-size:12px;font-weight:700;text-align:center">${esc("RÉPUBLIQUE ALGÉRIENNE DÉMOCRATIQUE ET POPULAIRE")}</div>${idBlock(p)}<h3 style="margin:8px 0 4px">DÉCOMPTE N° ${n}</h3>
-<table style="min-width:0"><tr><th>SITUATION ARRÊTÉE AU …</th><th class="r">MONTANT en DA</th></tr>${Rw("Montant des travaux cumulés ( H.T )",fp(r.cum))}${Ri("Avance forfaitaire totale ( H.T )","af")}${Ri("Avance sur approvisionnement totale ( H.T )","aa")}${Ri("Autres :","ao")}${Rw("TOTAL (1) ( H.T )",fp(T1),"tot")}
-<tr><td><i>Déduire</i></td><td></td></tr>${Rw("Montant des travaux réalisés précédemment",fp(r.prev))}${Rw("Avance forfaitaire totale ( H.T )",fp(b.af))}${Rw("Avance sur approvisionnement totale ( H.T )",fp(b.aa))}${Rw("Autres :",fp(b.ao))}${Rw("TOTAL (2) ( H.T )",fp(T2),"tot")}
-${Rw("Montant brut de la situation TOTAL (3) = (1) − (2)",fp(br),"tot")}<tr><td><i>Remboursement à effectuer :</i></td><td></td></tr>${Ri("Avance forfaitaire","rf")}${Ri("Avance sur approvisionnement","ra")}${Ri("Autres ( à préciser ) :","ro")}${Rw("TOTAL (4) ( H.T )",fp(T4),"tot")}
-${Rw("Montant HT de la situation (5) = (3) − (4)",fp(ht),"tot")}${Rw("T.V.A (6) "+p.tva+" %",fp(tva))}${Rw("Montant de la situation en TTC (7) = (5) + (6)",fp(ttc),"tot")}${ret?Rw("Retenue de garantie "+p.ret+" %","− "+fp(rt)):""}${Ri("Pénalités de retard","pen")}${Rw("NET À PAYER ( en toutes taxes )",fp(net),"net")}</table>
-${ret?"":`<div style="color:var(--mut);font-size:12px;margin-top:6px">Caution de garantie (${p.ret} %) : ${fmt(cau)} DA</div>`}
-<p>Le montant net à payer par la présente situation s’élève à la somme de ( en toutes taxes ) :<br><b>${lettres(net,0)}</b></p>
-<div style="margin-top:8px">Fait à …………… le ……………</div><div class="sig" style="grid-template-columns:repeat(2,1fr)"><div>LE SERVICE CONTRACTANT</div><div>LE COCONTRACTANT</div></div>
-<div class="row np" style="margin-top:10px"><button class="pri" onclick="fin('save')">💾 Enregistrer</button><button onclick="fin('print')">🖨️ Imprimer</button><button onclick="go('infos')">👷 Entrepreneur et contrat</button></div>${p.saved&&p.saved[p.sit]?`<div style="color:var(--mut);font-size:12px;margin-top:6px">✅ Enregistrée le ${p.saved[p.sit]}</div>`:""}</div>`}
-const selA=p=>`<div class="card"><label style="width:150px">Avenant n°<select onchange="set('avn',+this.value)">${[...Array(12)].map((_,i)=>`<option ${i+1==(p.avn||1)?"selected":""}>${i+1}</option>`).join("")}</select></label></div>`;
-function sq(i,v){const p=P(),it=p.items[i],n=p.avn||1;IT(it);it.av[n-1]=Math.round((v-it.q-it.av.slice(0,n-1).reduce((a,b)=>a+b,0))*1e6)/1e6;go()}
-function vAv(p){const r=calc(p);const n=p.avn||1,ln=Math.max(0,...p.items.flatMap(it=>it.av.map((x,k)=>x?k+1:0))),au=n==Math.max(n,ln);let T=0;const nqf=it=>au?it.qa:it.q+it.av.slice(0,n-1).reduce((a,b)=>a+b,0)+(it.av[n-1]||0);
-const rows=p.items.map((it,i)=>{const pr=it.q+it.av.slice(0,n-1).reduce((a,b)=>a+b,0),nq=Math.round((au?it.qa:pr+(it.av[n-1]||0))*1e6)/1e6;T+=nq*it.pu;
-return hd(p,i,7)+`<tr><td class="s1">${esc(it.n||"")}</td><td class="ds s2"><div class="dz">${esc(it.d)}</div></td><td>${esc(it.u)}</td>${Q(it,pr)}${Q(it,nq)}<td class="r">${fmt(it.pu)}</td><td class="r">${fp(nq*it.pu)}</td></tr>`+sbr(p,i,6,[it=>nqf(it)*it.pu])}).join("");
-const F=(l,v)=>`<tr class="tot"><td colspan="6">${l}</td><td class="r">${fp(v)}</td></tr>`;
-return selA(p)+`<div class="card sc">${hdr(p)}<div>PROJET : ${esc(p.name)}</div><b>AVENANT N° ${n} : DEVIS DES TRAVAUX</b><table style="min-width:720px;margin-top:6px"><tr><th class="s1">CODE</th><th class="s2">DÉSIGNATION DES OUVRAGES</th><th>U</th><th class="r">${n==1?"Quantité marché initial":"Quantité avant avenant"}</th><th class="r">Nouvelle quantité</th><th class="r">P-U</th><th class="r">Montant</th></tr>${rows}${F("MONTANT DU MARCHÉ INITIAL EN HT",r.mi)}${F("TOTAL EN HT ( nouveau marché )",T)}${F("TVA "+p.tva+" %",T*p.tva/100)}${F("TOTAL EN TTC",T*(1+p.tva/100))}</table></div>`}
-function aa(){P().items.push({n:"",d:"Nouvel article (avenant)",u:"u",q:0,pu:0,lot:"",m:Array(12).fill(0),av:[0,0,0]});go()}
-function vDgd(p){calc(p);const T=[0,0,0,0];
-const rows=p.items.map((it,i)=>{const q=[it.qm,it.tot,Math.max(it.tot-it.qm,0),Math.max(it.qm-it.tot,0)],v=q.map(x=>x*it.pu);v.forEach((x,j)=>T[j]+=x);
-return hd(p,i,12)+`<tr><td class="s1">${esc(it.n||"")}</td><td class="ds s2"><div class="dz">${esc(it.d)}</div></td><td>${esc(it.u)}</td>${q.map(x=>Q(it,x)).join("")}<td class="r">${fmt(it.pu)}</td>${v.map(x=>`<td class="r">${fp(x)}</td>`).join("")}</tr>`+sbr(p,i,8,[it=>it.qm*it.pu,it=>it.tot*it.pu,it=>Math.max(it.tot-it.qm,0)*it.pu,it=>Math.max(it.qm-it.tot,0)*it.pu],[0,0,1,1])}).join("");
-const tv=T.map(x=>x*p.tva/100),tt=T.map((x,j)=>x+tv[j]),F=(l,a)=>`<tr class="tot"><td colspan="8">${l}</td>${a.map((x,j)=>`<td class="r">${j>1&&Math.abs(x)<0.005?"":fp(x)}</td>`).join("")}</tr>`,ce=`style="text-align:center"`;
-return`<div class="card"><label style="flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--tx)"><input type="checkbox" style="width:auto" ${p.done?"checked":""} onchange="set('done',this.checked)"> Travaux terminés</label></div>
-<div class="card sc">${hdr(p)}<b>DÉCOMPTE GÉNÉRAL DÉFINITIF</b><div>PROJET : ${esc(p.name)}</div><table style="min-width:960px;margin-top:6px"><tr><th rowspan="2" class="s1">N°</th><th rowspan="2" class="s2">Désignation</th><th rowspan="2">U</th><th colspan="4" ${ce}>Quantité</th><th rowspan="2" class="r">P.U.</th><th colspan="4" ${ce}>Montant</th></tr><tr><th class="r">Marché</th><th class="r">Réalisé</th><th class="r">Plus-value</th><th class="r">Moins-value</th><th class="r">Marché</th><th class="r">Réalisé</th><th class="r">Plus-value</th><th class="r">Moins-value</th></tr>${rows}${F("TOTAL EN HT",T)}${F("TVA "+p.tva+"%",tv)}${F("TOTAL EN TTC",tt)}</table>
-<p>Arrêté le montant du présent DGD à la somme de (en TTC) :<br><b>${lettres(tt[1],1)}</b></p><div class="sig" style="grid-template-columns:repeat(2,1fr)"><div>Le Service Contractant</div><div>Le Cocontractant</div></div>
-<div class="row np" style="margin-top:8px"><button onclick="fin('print')">🖨️ Imprimer</button></div></div>`}
-const TABS=[["projets","🏠","Accueil"],["devis","📄","Devis"],["attachement","📎","Attachement"],["decompte","🧮","Décompte"],["situation","🧾","Situation"],["avenants","➕","Avenants"],["dgd","🏁","DGD"]];
-const VW={devis:vDevis,infos:vInfos,attachement:vAtt,decompte:vDec,situation:vSit,avenants:vAv,dgd:vDgd};
-function render(){const p=P();if(!VW[S.tab]&&S.tab!="projets"&&S.tab!="ouvrir")S.tab="projets";
-$("#pn").textContent=p?p.name:"Gestion de cabinet d’architecture · modèle algérien";
-$("#nav").innerHTML=TABS.map(([k,i,l])=>`<button class="${S.tab==k||(k=="projets"&&(S.tab=="infos"||S.tab=="ouvrir"))?"on":""}" ${k!="projets"&&!p?"disabled":""} onclick="go('${k}')"><span>${i}</span>${l}</button>`).join("");
-$("#v").innerHTML=S.tab=="ouvrir"?vOuvrir():S.tab=="projets"||!p?vProj():VW[S.tab](p)}
-render();
-</script>
+<script src="core.js"></script>
+<script src="import-backup.js"></script>
+<script src="views.js"></script>
+<script src="bootstrap.js"></script>
 </body>
 </html>

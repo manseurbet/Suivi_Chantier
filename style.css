@@ -14,7 +14,7 @@ nav button:disabled{opacity:.35}
 button,select,input{font:inherit;color:var(--tx)}
 button{border:1px solid var(--ln);background:var(--card);padding:7px 12px;border-radius:8px;cursor:pointer}
 button.on,button.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
-main{max-width:1000px;margin:0 auto;padding:0 14px 96px}
+main{max-width:1600px;margin:0 auto;padding:0 14px 96px}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:14px;margin:10px 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
 label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mut)}
@@ -22,9 +22,13 @@ input,select{border:1px solid var(--ln);background:var(--in);border-radius:6px;p
 td input{min-width:70px}
 td.d input{min-width:170px}
 .sc{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:780px}
-th,td{border:1px solid var(--ln);padding:4px 6px;text-align:left;vertical-align:middle}
-.dz{width:300px;max-width:300px;white-space:normal;overflow-wrap:anywhere}
+table{border-collapse:separate;border-spacing:0;width:auto;min-width:0;font-size:13px;border-top:1px solid var(--ln);border-left:1px solid var(--ln)}
+.card{min-width:0;max-width:100%}
+th,td{border:0;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln);padding:4px 6px;text-align:left;vertical-align:middle}
+.s1,.s2{position:sticky;background:var(--card);z-index:2}
+.s1{left:0;width:52px;min-width:52px;max-width:52px;box-sizing:border-box;overflow:hidden}
+.s2{left:52px}
+.dz{width:260px;max-width:260px;white-space:normal;overflow-wrap:anywhere}
 label.btn{display:inline-flex;flex-direction:row;align-items:center;gap:6px;color:var(--tx);font-size:14px;border:1px solid var(--ln);background:var(--card);padding:7px 12px;border-radius:8px;cursor:pointer}
 label.btn.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
 th{font-size:12px;color:var(--mut)}
@@ -39,4 +43,6 @@ input[type=number]{-moz-appearance:textfield}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .sig{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;font-size:12px}
 .sig div{border:1px solid var(--ln);height:90px;padding:6px}
+@media (max-width:700px){.dz{width:112px;max-width:112px;font-size:12px}th,td{padding:3px 4px;font-size:12px}td input{min-width:56px}}
+@media (max-width:420px){nav button{font-size:9px;letter-spacing:-.3px}nav button span{font-size:18px}}
 @media print{header,nav,.np{display:none}body{background:#fff;color:#000}.card{border:0}}

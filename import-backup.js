@@ -19,5 +19,4 @@ const rd=new FileReader();FN=fl.name;
 rd.onload=e=>{try{if(typeof XLSX==="undefined"){S.msg="La bibliothèque de lecture Excel n’est pas chargée (connexion internet ?). Utilisez « Ou coller depuis Excel » ci-dessous.";go();return}const wb=XLSX.read(e.target.result,{type:"array"});
 cands(wb.SheetNames.filter(n=>!/infrastructure/i.test(n)).map(nm=>({nm,it:parseSheet(XLSX.utils.sheet_to_json(wb.Sheets[nm],{header:1,defval:""}))})))}catch(x){S.msg="Fichier illisible. Utilisez un fichier Excel ou CSV.";go()}};
 rd.onerror=()=>{S.msg="Lecture du fichier impossible. Utilisez « Ou coller depuis Excel » ci-dessous.";go()};rd.readAsArrayBuffer(fl)}
-function impTxt(t){const p=P();if(Object.keys(p.val||{}).length){S.msg="Devis verrouillé : des attachements sont déjà validés.";go();return}FN="";cands([{nm:"texte collé",it:parseSheet(t.split(/\r?\n/).map(l=>l.split("\t")))}])}
 function tg(){const p=P();p.lock=!p.lock;go()}
