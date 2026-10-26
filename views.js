@@ -65,7 +65,7 @@ ${ret?"":`<div style="color:var(--mut);font-size:12px;margin-top:6px">Caution de
 const selA=p=>`<div class="card np"><label style="width:150px">Avenant n°<select onchange="set('avn',+this.value)">${[...Array(12)].map((_,i)=>`<option ${i+1==(p.avn||1)?"selected":""}>${i+1}</option>`).join("")}</select></label></div>`;
 function sq(i,v){const p=P(),it=p.items[i],n=p.avn||1;IT(it);it.av[n-1]=Math.round((v-it.q-it.av.slice(0,n-1).reduce((a,b)=>a+b,0))*1e6)/1e6;go()}
 function vAv(p){const r=calc(p),n=p.avn||1,ln=Math.max(0,...p.items.flatMap(it=>it.av.map((x,k)=>x?k+1:0))),au=n==Math.max(n,ln),R6=x=>Math.round(x*1e6)/1e6;
-let prT=0;const L=p.items.map((it,i)=>{const pr=it.q+it.av.slice(0,n-1).reduce((a,b)=>a+b,0),nq=R6(au?it.qa:pr+(it.av[n-1]||0));prT+=pr*it.pu;return{it,i,d:R6(nq-pr)}});
+let prT=0;const L=p.items.map((it,i)=>{const pr=it.q+it.av.slice(0,n-1).reduce((a,b)=>a+b,0),nq=R6(au?it.tot:pr+(it.av[n-1]||0));prT+=pr*it.pu;return{it,i,d:R6(nq-pr)}});
 const pg=sg=>{const ls=L.filter(x=>sg*x.d>1e-9),sl=lot=>ls.filter(y=>y.it.lot===lot).reduce((a,y)=>a+sg*y.d*y.it.pu,0);let T=0;
 const rows=ls.map((x,j)=>{const it=x.it,q=sg*x.d,m=q*it.pu,pv=ls[j-1],nx=ls[j+1];T+=m;
 return(it.lot&&(!pv||pv.it.lot!==it.lot)?`<tr><td colspan="6"><b>${esc(it.lot)}</b></td></tr>`:"")+`<tr><td class="s1">${esc(it.n||"")}</td><td class="ds s2"><div class="dz">${esc(it.d)}</div></td><td>${esc(it.u)}</td>${Q(it,q)}<td class="r">${fmt(it.pu)}</td><td class="r">${fp(m)}</td></tr>`+(it.lot&&(!nx||nx.it.lot!==it.lot)?`<tr class="tot"><td colspan="5">TOTAL ${esc(it.lot)}</td><td class="r">${fp(sl(it.lot))}</td></tr>`:"")}).join("")||`<tr><td colspan="6"><i>Aucun article.</i></td></tr>`;
@@ -74,8 +74,8 @@ const A=pg(1),B=pg(-1),F=(l,v)=>`<tr class="tot"><td colspan="5">${l}</td><td cl
 th=`<tr><th class="s1">CODE</th><th class="s2">DÉSIGNATION DES OUVRAGES</th><th>U</th><th class="r">Quantité</th><th class="r">P-U</th><th class="r">Montant</th></tr>`,
 hh=t=>`${hdr(p)}<div>PROJET : ${esc(p.name)}</div><b>AVENANT N° ${n} : ${t}</b>`,
 nv=prT+A.T-B.T,Rc=(l,v,c)=>`<tr class="${c||""}"><td>${l}</td><td class="r">${fp(v)}</td></tr>`;
-return selA(p)+`<div class="card sc">${hh("TRAVAUX SUPPLÉMENTAIRES")}<table style="margin-top:6px">${th}${A.rows}${F("TOTAL EN HT",A.T)}${F("TVA "+p.tva+" %",A.T*p.tva/100)}${F("TOTAL EN TTC",A.T*(1+p.tva/100))}</table></div>
-<div class="card sc pgb">${hh("TRAVAUX EN DIMINUTION")}<table style="margin-top:6px">${th}${B.rows}${F("TOTAL EN HT",B.T)}${F("TVA "+p.tva+" %",B.T*p.tva/100)}${F("TOTAL EN TTC",B.T*(1+p.tva/100))}</table>
+return selA(p)+`<div class="card sc">${hh("TRAVAUX SUPPLÉMENTAIRES")}<table style="margin-top:6px">${th}${A.rows}${F("TOTAL EN HT",A.T)}${F("TVA "+p.tva+" %",A.T*p.tva/100)}${F("TOTAL EN TTC",A.T*(1+p.tva/100))}</table><p>Arrêté le montant des travaux supplémentaires à la somme de (en TTC) :<br><b>${lettres(A.T*(1+p.tva/100),1)}</b></p></div>
+<div class="card sc pgb">${hh("TRAVAUX EN DIMINUTION")}<table style="margin-top:6px">${th}${B.rows}${F("TOTAL EN HT",B.T)}${F("TVA "+p.tva+" %",B.T*p.tva/100)}${F("TOTAL EN TTC",B.T*(1+p.tva/100))}</table><p>Arrêté le montant des travaux en diminution à la somme de (en TTC) :<br><b>${lettres(B.T*(1+p.tva/100),1)}</b></p>
 <b style="display:block;margin-top:14px">RÉCAPITULATIF DE L’AVENANT N° ${n}</b><table style="margin-top:6px">${Rc("MONTANT DU MARCHÉ INITIAL EN HT",r.mi)}${n>1?Rc("Montant du marché avant l’avenant n° "+n+" ( HT )",prT):""}${Rc("+ Travaux supplémentaires ( HT )",A.T)}${Rc("− Travaux en diminution ( HT )",B.T)}${Rc("NOUVEAU MONTANT DU MARCHÉ EN HT",nv,"tot")}${Rc("TVA "+p.tva+" %",nv*p.tva/100)}${Rc("NOUVEAU MONTANT DU MARCHÉ EN TTC",nv*(1+p.tva/100),"tot")}</table></div>
 <div class="row np"><button onclick="fin('print')">🖨️ Imprimer</button></div>`}
 function aa(){P().items.push({n:"",d:"Nouvel article (avenant)",u:"u",q:0,pu:0,lot:"",m:Array(12).fill(0),av:[0,0,0]});go()}
