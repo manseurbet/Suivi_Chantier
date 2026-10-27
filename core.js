@@ -9,7 +9,7 @@ const save=()=>{try{localStorage.setItem("archigest_dz",JSON.stringify(S));OK=tr
 const P=()=>S.projects.find(p=>p.id===S.cur);
 function mk(name){return{id:Date.now(),name,moa:"",ent:"",gar:"caution",contrat:"",objet:"",montant:0,doit:"",adr:"",rc:"",nif:"",nis:"",art:"",rib:"",bq:"",tva:19,ret:5,items:[],adj:{},sit:1}}
 function setMode(m){S.mode=m;S.del=null;go()}
-function np(){if(S.mode=="entreprise"&&S.projects.length){S.bm="Profil entreprise : un seul dossier. Utilisez OUVRIR pour le reprendre.";go();return}const p=mk("Nouveau projet");S.projects.push(p);S.cur=p.id;S.tab="devis";S.del=null;go()}
+function np(){if(S.mode=="entreprise"&&(S.projects.length||S.entUsed)){S.bm="Profil entreprise : un seul dossier. Utilisez OUVRIR pour le reprendre.";go();return}const p=mk("Nouveau projet");if(S.mode=="entreprise")S.entUsed=true;S.projects.push(p);S.cur=p.id;S.tab="devis";S.del=null;go()}
 function dp(){if(S.del==S.cur){S.projects=S.projects.filter(x=>x.id!=S.cur);S.cur=S.projects[0]?S.projects[0].id:null;S.del=null}else S.del=S.cur;go()}
 function go(t){if(t){if(t=="infos"&&S.tab!="infos")S.prev=S.tab;S.tab=t;S.msg="";S.bm="";S.sm=""}save();render()}
 function set(k,v){P()[k]=v;go()}

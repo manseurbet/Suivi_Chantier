@@ -26,7 +26,7 @@ function cands(l){CAND=l.filter(x=>x.it.length).map(x=>Object.assign(x,{t:x.it.r
 if(!CAND.length){S.msg="Aucun article reconnu : vérifiez que les colonnes sont dans l’ordre Code, Désignation, Unité, Quantité, Prix unitaire, Montant.";go();return}
 S.msg="";go()}
 function cn(){if(CAND[0]&&CAND[0].nm=="Texte collé")S.pz=true;CAND=[];S.msg="";go()}
-function imp(inp){const fl=inp.files[0];if(!fl)return;const p=P();if(Object.keys(p.val||{}).length){S.msg="Devis verrouillé : des attachements sont déjà validés.";go();return}
+function imp(inp){if(!IMPORT_FILE_ON){inp.value="";return}const fl=inp.files[0];if(!fl)return;const p=P();if(Object.keys(p.val||{}).length){S.msg="Devis verrouillé : des attachements sont déjà validés.";go();return}
 const rd=new FileReader();FN=fl.name;
 rd.onload=e=>{try{if(typeof XLSX==="undefined"){S.msg="La bibliothèque de lecture Excel n’est pas chargée (connexion internet ?). Utilisez le bouton « Coller ici ».";go();return}const wb=XLSX.read(e.target.result,{type:"array"});
 const sh=wb.SheetNames.filter(n=>!/infrastructure/i.test(n)).map(nm=>({nm,rw:XLSX.utils.sheet_to_json(wb.Sheets[nm],{header:1,defval:""})}));let l=sh.map(x=>({nm:x.nm,it:parseSheet(x.rw)}));if(!l.some(x=>x.it.length))l=sh.map(x=>({nm:x.nm,it:parseSheet(x.rw,2)}));cands(l)}catch(x){S.msg="Fichier illisible. Utilisez un fichier Excel ou CSV.";go()}};
@@ -44,6 +44,8 @@ S.pz=!it.length;cands([{nm:"Texte collé",it}])}
 function tg(){const p=P();p.lock=!p.lock;go()}
 
 /* ===== Export Excel (lecture seule, sans mot de passe) et restauration ===== */
+const EXPORT_ON=true; /* false = bouton « 📤 Excel » grisé */
+const IMPORT_FILE_ON=false; /* true = réactive le bouton « 📄 Importer un devis » (chargement d’un fichier) */
 const NUMFR=s=>{s=s.replace(/[\u202f\u00a0]/g," ");let m=/^([−-])?\s*(\d{1,3}(?: \d{3})*|\d+),(\d+)$/.exec(s);if(m)return{t:"n",v:(m[1]?-1:1)*parseFloat(m[2].replace(/ /g,"")+"."+m[3]),z:"#,##0."+"0".repeat(m[3].length)};m=/^([−-])?\s*(\d{1,3}(?: \d{3})+)$/.exec(s);if(m)return{t:"n",v:(m[1]?-1:1)*parseInt(m[2].replace(/ /g,""),10),z:"#,##0"};return s};
 function t2a(tb){const rows=[...tb.rows],g=[],mg=[];
 rows.forEach((tr,ri)=>{g[ri]=g[ri]||[];let c=0;[...tr.cells].forEach(td=>{while(g[ri][c]!==undefined)c++;const cs=td.colSpan||1,rs=td.rowSpan||1,inp=td.querySelector("input,select");let v;
@@ -59,7 +61,7 @@ const ws=XLSX.utils.aoa_to_sheet(A);if(MG.length)ws["!merges"]=MG;
 const nc=Math.max(1,...A.map(r=>r.length)),w=[];for(let c=0;c<nc;c++){let m=6;A.forEach(r=>{if(r.filter(x=>x!==""&&x!==undefined).length>=2){const x=r[c],l=x&&typeof x==="object"?String(Math.round(x.v*100)/100).length+4:String(x===undefined?"":x).length;if(l>m)m=l}});w.push({wch:Math.min(m+2,60)})}
 ws["!cols"]=w;ws["!protect"]={};return ws}
 function shName(n,used){n=n.replace(/[\[\]:*?\/\\]/g," ").slice(0,31);let b=n,i=2;while(used.has(n.toLowerCase())){n=b.slice(0,28)+" "+i++}used.add(n.toLowerCase());return n}
-function exportX(id){const p0=S.projects.find(x=>x.id==id);if(!p0)return;
+function exportX(id){if(!EXPORT_ON)return;const p0=S.projects.find(x=>x.id==id);if(!p0)return;
 if(typeof XLSX==="undefined"){S.bm="La bibliothèque Excel n’est pas chargée (connexion internet ?). Réessayez.";go();return}
 const sv={cur:S.cur,tab:S.tab,msg:S.msg,pz:S.pz,cand:CAND,sit:p0.sit,avn:p0.avn};let fn="";
 try{S.cur=id;S.msg="";S.pz=false;CAND=[];const p=p0,wb=XLSX.utils.book_new(),used=new Set(),dt=new Date().toLocaleDateString("fr-FR"),note="Fichier en lecture seule – exporté d’ArchiGest DZ le "+dt+" – projet : "+p.name;
@@ -87,10 +89,10 @@ a.href=URL.createObjectURL(bl);a.download=fn;document.body.appendChild(a);a.clic
 sv.ok=true}catch(x){sv.err=x}finally{p0.sit=sv.sit;p0.avn=sv.avn;S.cur=sv.cur;S.tab=sv.tab;S.msg=sv.msg;S.pz=sv.pz;CAND=sv.cand}
 S.bm=sv.ok?"✅ Fichier « "+fn+" » créé (lecture seule). Conservez-le : il permet aussi de restaurer le projet.":"L’export a échoué : "+(sv.err&&sv.err.message||"erreur inconnue")+". Rien n’a été modifié dans vos données.";go()}
 function restX(inp){const fl=inp.files[0];inp.value="";if(!fl)return;
-if(S.mode=="entreprise"&&S.projects.length){S.bm="Profil entreprise : un seul dossier. Supprimez le dossier actuel avant d’en restaurer un autre.";go();return}
+if(S.mode=="entreprise"&&(S.projects.length||S.entUsed)){S.bm="Profil entreprise : un seul dossier. Utilisez « Réinitialiser » pour recommencer à zéro.";go();return}
 const rd=new FileReader();rd.onload=e=>{try{if(typeof XLSX==="undefined"){S.bm="La bibliothèque Excel n’est pas chargée (connexion internet ?). Réessayez.";go();return}
 const wb=XLSX.read(e.target.result,{type:"array"}),ws=wb.Sheets["_archigest"];
-if(!ws){S.bm="Ce fichier ne contient pas de données de restauration ArchiGest DZ (il n’a pas été exporté par l’application). Pour un devis, utilisez « Importer un devis ».";go();return}
+if(!ws){S.bm="Ce fichier ne contient pas de données de restauration ArchiGest DZ (il n’a pas été exporté par l’application). Pour un devis, utilisez « Coller ici ».";go();return}
 const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});if(!rows.length||rows[0][0]!=="ARCHIGEST-DZ-V1")throw new Error("format");
 const o=JSON.parse(rows.slice(1).map(r=>r[0]).join("")),q=o&&o.project;
 if(!q||typeof q.name!=="string"||!Array.isArray(q.items)||!q.items.every(it=>it&&typeof it.d==="string"&&isFinite(it.q)&&isFinite(it.pu)&&Array.isArray(it.m)))throw new Error("contenu");
