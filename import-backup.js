@@ -21,7 +21,7 @@ if(nu)W.push(nu+" article(s) sans unité.");
 if(fx===2&&it.length)W.unshift("Aucune ligne d’en-tête reconnue : lecture par position (Code – Désignation – Unité – Quantité – Prix unitaire – Montant). Vérifiez que cet ordre est bien celui du fichier.");
 it.w=W;it.chk=c.mt>=0&&mS>0?{mS,mN}:null;return it}
 let CAND=[],FN="";
-function use(i){const p=P(),c=CAND[i];p.items=c.it.slice();p.adj={};p.sit=1;p.val={};p.lock=true;if(p.name==="Nouveau projet"&&FN)p.name=FN.replace(/\.[^.]+$/,"");S.msg=c.it.length+" articles importés depuis « "+c.nm+" » : total HT "+fmt(c.t)+" DA. Comparez avec le total de votre devis.";CAND=[];S.pt="";S.pz=false;S.tab="devis";go()}
+function use(i){const p=P(),c=CAND[i];p.items=c.it.slice();p.adj={};p.sit=1;p.val={};p.lock=true;if((S.pn||"").trim())p.name=S.pn.trim();if(p.name==="Nouveau projet"&&FN)p.name=FN.replace(/\.[^.]+$/,"");S.msg=c.it.length+" articles importés depuis « "+c.nm+" » : total HT "+fmt(c.t)+" DA. Comparez avec le total de votre devis.";CAND=[];S.pt="";S.pn="";S.pz=false;S.tab="devis";go()}
 function cands(l){CAND=l.filter(x=>x.it.length).map(x=>Object.assign(x,{t:x.it.reduce((a,y)=>a+y.q*y.pu,0)}));
 if(!CAND.length){S.msg="Aucun article reconnu : vérifiez que les colonnes sont dans l’ordre Code, Désignation, Unité, Quantité, Prix unitaire, Montant.";go();return}
 S.msg="";go()}
@@ -34,8 +34,10 @@ rd.onerror=()=>{S.msg="Lecture du fichier impossible. Utilisez le bouton « Coll
 function ptab(t){const R=[];let r=[],f="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=ch}else if(ch=='"'&&f==="")q=true;else if(ch=="\t"){r.push(f);f=""}else if(ch=="\n"||ch=="\r"){if(ch=="\r"&&t[i+1]=="\n")i++;r.push(f);f="";R.push(r);r=[]}else f+=ch}
 if(f!==""||r.length){r.push(f);R.push(r)}while(R.length&&R[R.length-1].every(x=>!String(x).trim()))R.pop();return R}
 function spt(v){S.pt=v}
-function pzs(){S.pz=!S.pz;go()}
+function pzs(){S.pz=!S.pz;if(S.pz&&!S.pn){const n=P().name;S.pn=(n==="Nouveau projet"||n==="Nouveau devis")?"":n}go()}
+function spn(v){S.pn=v}
 function pza(){const p=P();if(Object.keys(p.val||{}).length){S.msg="Devis verrouillé : des attachements sont déjà validés.";go();return}
+if(!(S.pn||"").trim()&&(p.name==="Nouveau projet"||p.name==="Nouveau devis")){S.msg="Donnez d’abord un nom au devis (champ « Nom du devis »).";go();return}
 const t=S.pt||"";if(!t.trim()){S.msg="Rien à analyser : collez d’abord les lignes de votre devis.";go();return}
 if(t.indexOf("\t")<0){S.msg="Aucune séparation de colonnes trouvée. Copiez les cellules directement depuis Excel ou Google Sheets (un texte copié depuis un PDF n’est pas lisible).";go();return}
 const R=ptab(t),wide=R.some(r=>r.slice(6).some(x=>String(x).trim()));FN="";const it=parseSheet(R,1);
