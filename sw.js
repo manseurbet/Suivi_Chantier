@@ -1,6 +1,6 @@
 // Service worker ArchiGest DZ : fichiers du site d'abord depuis le réseau (les mises à jour apparaissent tout de suite),
 // copie en cache pour le mode hors ligne. Changer V pour vider l'ancien cache.
-const V="archigest-v3";
+const V="archigest-v4";
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(["./","index.html","style.css","core.js","import-backup.js","xlsx.full.min.js","views.js","bootstrap.js","manifest.webmanifest","favicon.png","icon-192.png","icon-512.png","apple-touch-icon.png"])).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 const keep=(r,res)=>{const cp=res.clone();caches.open(V).then(c=>c.put(r,cp))};
