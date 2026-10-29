@@ -47,7 +47,7 @@ function tg(){const p=P();p.lock=!p.lock;go()}
 
 /* ===== Export Excel (lecture seule, sans mot de passe) et restauration ===== */
 const EXPORT_ON=true; /* false = bouton « 📤 Excel » grisé */
-const IMPORT_FILE_ON=false; /* true = réactive le bouton « 📄 Importer un devis » (chargement d’un fichier) */
+const IMPORT_FILE_ON=true;  /* true = réactive le bouton « 📄 Importer un devis » (chargement d’un fichier) */
 const NUMFR=s=>{s=s.replace(/[\u202f\u00a0]/g," ");let m=/^([−-])?\s*(\d{1,3}(?: \d{3})*|\d+),(\d+)$/.exec(s);if(m)return{t:"n",v:(m[1]?-1:1)*parseFloat(m[2].replace(/ /g,"")+"."+m[3]),z:"#,##0."+"0".repeat(m[3].length)};m=/^([−-])?\s*(\d{1,3}(?: \d{3})+)$/.exec(s);if(m)return{t:"n",v:(m[1]?-1:1)*parseInt(m[2].replace(/ /g,""),10),z:"#,##0"};return s};
 function t2a(tb){const rows=[...tb.rows],g=[],mg=[];
 rows.forEach((tr,ri)=>{g[ri]=g[ri]||[];let c=0;[...tr.cells].forEach(td=>{while(g[ri][c]!==undefined)c++;const cs=td.colSpan||1,rs=td.rowSpan||1,inp=td.querySelector("input,select");let v;
