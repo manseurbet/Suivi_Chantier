@@ -69,8 +69,7 @@ return`<div class="card"><b>Entrepreneur et contrat</b><div style="color:var(--m
 const qs=(it,x)=>{const d=isM3(it.u)?3:2;return tr(x,d).toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d})};
 const Q=(it,x)=>`<td class="r">${qs(it,x)}</td>`,qv=(it,x)=>isM3(it.u)?tr(x,3).toFixed(3):x;
 const isP=l=>/^\s*(s\/|sous)/i.test(l),sv2=(p,i,f,lb)=>{const it=p.items[i],part=isP(lb);let a=0;for(let j=i;j>=0;j--){const x=p.items[j];if(x.lot!==it.lot)break;if(j<i&&x.sub&&(part||x.sub.some(l=>!isP(l))))break;a=ta(a+f(x))}return a};
-const ptl=(it,w)=>(it.post||[]).map(h=>`<tr><td colspan="${w}">${h.l?"<b>"+esc(h.t)+"</b>":"<i>"+esc(h.t)+"</i>"}</td></tr>`).join("");
-const sbr=(p,i,k,fs,bl)=>(p.items[i].sub||[]).map(lb=>`<tr class="tot"><td colspan="${k}">${esc(lb)}</td>${fs.map((f,j)=>{const v=sv2(p,i,f,lb);return`<td class="r">${bl&&bl[j]&&Math.abs(v)<0.01?"":fp(v)}</td>`}).join("")}</tr>`).join("")+ptl(p.items[i],k+fs.length);
+const sbr=(p,i,k,fs,bl)=>(p.items[i].sub||[]).map(lb=>`<tr class="tot"><td colspan="${k}">${esc(lb)}</td>${fs.map((f,j)=>{const v=sv2(p,i,f,lb);return`<td class="r">${bl&&bl[j]&&Math.abs(v)<0.01?"":fp(v)}</td>`}).join("")}</tr>`).join("");
 const hd=(p,i,w)=>{const it=p.items[i];if(it.pre)return it.pre.map(h=>h.l?`<tr><td colspan="${w}"><b>${esc(h.t)}</b></td></tr>`:`<tr><td class="s1">${esc(h.k||"")}</td><td class="s2"><div class="dz"><i>${esc(h.t)}</i></div></td>${"<td></td>".repeat(Math.max(w-2,0))}</tr>`).join("");
 const q=p.items[i-1]||{},o=[];
 if(it.lot&&it.lot!==q.lot)o.push(`<tr><td colspan="${w}"><b>${esc(it.lot)}</b></td></tr>`);
