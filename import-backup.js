@@ -6,7 +6,7 @@ if(!c)return[];
 const it=[],W=[],seen={},sn=t=>t.length>40?t.slice(0,40)+"…":t,isT=t=>/(^|[\s\/])total([^a-zà-ÿ]|$)/i.test(t),glob=t=>/g[ée]n[ée]ral|t\.?t\.?c|toutes\s+taxes/i.test(t)||/^\s*total\s*(en\s*)?h\.?t\.?\s*:?\s*$/i.test(t);let lot="",pre=[],mS=0,mN=0,nu=0;
 rows.slice(s).forEach((r,ix)=>{const ln=s+ix+1,dd=String(r[c.d]).replace(/\s+/g," ").trim(),k=c.k>=0?String(r[c.k]).trim():"",q=num(r[c.q]),pu=num(r[c.pu]),mt=c.mt>=0?num(r[c.mt]):NaN,last=it[it.length-1];
 const sub=lb=>{if(last&&!glob(lb)){(last.sub=last.sub||[]).push(lb);const m=lb.match(/^\s*total\s*lot\s*(\d+)/i);if(m)for(let j=it.length-1;j>=0&&!it[j].lot;j--)it[j].lot="LOT "+m[1]}};
-if(!dd){const lb=String(r[c.pu]).trim();if(isT(lb)){sub(lb);return}if(!(q>0)){if(pu>0||mt>0)W.push("Ligne "+ln+" : des montants sont présents mais ni désignation ni quantité. Ligne non reprise.");return}W.push("Ligne "+ln+" : article sans désignation.")}
+if(!dd){const lb=String(r[c.pu]).trim();if(isT(lb)){sub(lb);return}if(!(q>0)){if(pu>0||mt>0)W.push("Ligne "+ln+" : des montants sont présents mais ni désignation ni quantité. Ligne non reprise.");return}}
 if(!(q>0)){if(isT(dd)){sub(dd);return}const qc=String(r[c.q]).trim();
 if(pu>0)W.push("Ligne "+ln+" « "+sn(dd)+" » : un prix est indiqué mais la quantité est "+(qc===""?"vide":"« "+qc+" »")+". Ligne reprise comme simple titre.");
 else if(qc!==""&&q!==0)W.push("Ligne "+ln+" « "+sn(dd)+" » : quantité « "+qc+" » non reconnue. Ligne reprise comme simple titre.");
@@ -14,9 +14,9 @@ if(/^lot\s*\d/i.test(dd)){lot=dd;pre.push({t:dd,l:1})}else pre.push({t:dd,k});re
 const puv=pu>=0?pu:0;if(!(pu>=0))W.push("Ligne "+ln+" « "+sn(dd)+" » : prix unitaire absent ou illisible. Il est compté 0.");
 if(mt>=0){mS+=mt;mN+=q*puv;if(Math.abs(q*puv-mt)>0.5)W.push("Ligne "+ln+" « "+sn(dd)+" » : quantité × prix = "+fmt(q*puv)+" DA, mais le fichier indique "+fmt(mt)+" DA.")}
 const u=c.u>=0?String(r[c.u]).trim():"";if(!u)nu++;
-if(k){if(seen[k])W.push("Code "+k+" en double (lignes "+seen[k]+" et "+ln+").");else seen[k]=ln}
+
 it.push({n:k,pre,d:dd,u,q,pu:puv,lot,m:Array(12).fill(0),av:[0,0,0]});pre=[]});
-if(pre.length)W.push("Titre(s) en fin de devis sans article, non repris : "+pre.map(x=>"« "+sn(x.t)+" »").join(", ")+".");
+
 if(nu)W.push(nu+" article(s) sans unité.");
 if(fx===2&&it.length)W.unshift("Aucune ligne d’en-tête reconnue : lecture par position (Code – Désignation – Unité – Quantité – Prix unitaire – Montant). Vérifiez que cet ordre est bien celui du fichier.");
 it.w=W;it.chk=c.mt>=0&&mS>0?{mS,mN}:null;return it}
