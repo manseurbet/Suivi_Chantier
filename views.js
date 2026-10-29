@@ -1,5 +1,5 @@
 /* ================================================================
-   ACCUEIL — blocs affichés sur l’accueil (contact, projets à plusieurs devis)
+   ACCUEIL — blocs affichés sur l’accueil (contact)
    ================================================================ */
 const ctc=()=>`<div class="card np" style="text-align:center;font-size:13px"><b>Une question, une suggestion ?</b><div class="row" style="justify-content:center;margin-top:8px"><a href="https://wa.me/213556751401" target="_blank" rel="noopener" style="color:var(--ac);font-weight:600">💬 WhatsApp : +213 556 75 14 01</a><a href="mailto:manseur.bet@gmail.com" style="color:var(--ac);font-weight:600">✉️ manseur.bet@gmail.com</a></div></div>`;
 const dsc=()=>{const dl=[...new Set(S.projects.map(x=>x.grp).filter(Boolean))].filter(g=>S.projects.filter(x=>x.grp===g).length>1);if(!dl.length)return"";return`<div class="card np"><b>📂 Projets à plusieurs devis</b>${dl.map(g=>{const n=S.projects.filter(x=>x.grp===g).length;return`<div class="row" style="margin-top:8px;flex-wrap:nowrap"><span style="flex:1">📂 ${esc(g)} <small style="color:var(--mut)">(${n} devis)</small></span><button onclick="opd(${JSON.stringify(g).replace(/"/g,"&quot;")})">📑 Récapitulatives générales</button></div>`}).join("")}</div>`};
@@ -18,7 +18,7 @@ function dpj(g){if(S.dg===g){S.projects=S.projects.filter(x=>x.grp!==g);if(S.cur
    ACCUEIL — page principale (choix du mode, + Nouveau projet, Ouvrir)
    ================================================================ */
 function vProj(){return mg(),vProj1()}
-function vProj1(){return vProj0()+(S.mode=="bureau"?dsc():"")+(S.mode?ctc():"")}
+function vProj1(){return vProj0()+(S.mode?ctc():"")}
 function vProj0(){if(!S.mode)return`<div class="card" style="text-align:center"><div style="font-size:42px">🏗️</div><div style="margin:4px 0 12px">Vous êtes :</div><button class="pri" style="width:100%;font-size:17px;padding:14px" onclick="setMode('bureau')">🏛️ Bureau d’architecture<br><small>Plusieurs projets · abonnement mensuel</small></button><button style="width:100%;font-size:17px;padding:14px;margin-top:10px" onclick="setMode('entreprise')">👷 Entreprise de réalisation<br><small>Un seul projet · facturé par projet</small></button></div>`;return`<div class="card" style="text-align:center"><div style="font-size:42px">🏗️</div><div style="display:flex;flex-direction:column;gap:12px;margin-top:14px"><button class="pri" style="font-size:18px;padding:16px" onclick="${S.mode=='bureau'?'npj()':'np()'}">+ Nouveau projet</button><button style="font-size:18px;padding:16px" onclick="go('ouvrir')">📂 Ouvrir</button>${RSB}</div>${S.bm?`<p class="bad">${esc(S.bm)}</p>`:""}</div>${OK?"":`<div class="card bad">⚠️ Le navigateur bloque l’enregistrement : vos projets seront perdus à la fermeture.</div>`}`}
 
 /* ================================================================
