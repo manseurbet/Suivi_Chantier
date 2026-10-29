@@ -16,6 +16,7 @@ if(mt>=0){mS+=mt;mN+=q*puv;if(Math.abs(q*puv-mt)>0.5)W.push("Ligne "+ln+" « "+s
 const u=c.u>=0?String(r[c.u]).trim():"";if(!u)nu++;
 
 it.push({n:k,pre,d:dd,u,q,pu:puv,lot,m:Array(12).fill(0),av:[0,0,0]});pre=[]});
+if(pre.length&&it.length)it[it.length-1].post=pre;
 
 if(nu)W.push(nu+" article(s) sans unité.");
 if(fx===2&&it.length)W.unshift("Aucune ligne d’en-tête reconnue : lecture par position (Code – Désignation – Unité – Quantité – Prix unitaire – Montant). Vérifiez que cet ordre est bien celui du fichier.");
