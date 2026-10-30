@@ -7,7 +7,7 @@ const it=[],W=[],seen={},sn=t=>t.length>40?t.slice(0,40)+"…":t,isT=t=>/(^|[\s\
 rows.slice(s).forEach((r,ix)=>{const ln=s+ix+1,dd=String(r[c.d]).replace(/\s+/g," ").trim(),k=c.k>=0?String(r[c.k]).trim():"",q=num(r[c.q]),pu=num(r[c.pu]),mt=c.mt>=0?num(r[c.mt]):NaN,last=it[it.length-1];
 const sub=lb=>{if(last&&!glob(lb)){(last.sub=last.sub||[]).push(lb);const m=lb.match(/^\s*total\s*lot\s*(\d+)/i);if(m)for(let j=it.length-1;j>=0&&!it[j].lot;j--)it[j].lot="LOT "+m[1]}};
 if(!dd){const lb=String(r[c.pu]).trim(),lk=lb||k;if(isT(lk)||glob(lk)){sub(lk);return}if(!(q>0)){if(pu>0||mt>0)W.push("Ligne "+ln+" : des montants sont présents mais ni désignation ni quantité. Ligne non reprise.");return}}
-if(!(q>0)){if(isT(dd)){sub(dd);return}const qc=String(r[c.q]).trim();
+if(!(q>0)){if(isT(dd)||glob(dd)){sub(dd);return}const qc=String(r[c.q]).trim();
 if(pu>0)W.push("Ligne "+ln+" « "+sn(dd)+" » : un prix est indiqué mais la quantité est "+(qc===""?"vide":"« "+qc+" »")+". Ligne reprise comme simple titre.");
 else if(qc!==""&&q!==0)W.push("Ligne "+ln+" « "+sn(dd)+" » : quantité « "+qc+" » non reconnue. Ligne reprise comme simple titre.");
 if(/^lot\s*\d/i.test(dd)){lot=dd;pre.push({t:dd,l:1})}else pre.push({t:dd,k});return}
